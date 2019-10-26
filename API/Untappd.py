@@ -4,19 +4,16 @@ import requests
 import json
 import os
 
-# Requires 
-class UntappdApi:
+class Untappd:
 
-    _clientId = os.getenv("CLIENT_ID")
-    _clientSecret = os.getenv("CLIENT_SECRET")
-    _baseUrl = "https://api.untappd.com/v4/"
-    _keys = {}
-
-    def __init__(self, str clientId, str clientSecret):
+    def __init__(self, clientId = "", clientSecret = ""):
         load_dotenv(dotenv_path="../.env")
+        self._clientId = os.getenv("CLIENT_ID")
+        self._clientSecret = os.getenv("CLIENT_SECRET")
+        self._baseUrl = "https://api.untappd.com/v4/"
 
 
-    def keys():
+    def keys(self):
         return {
             "client_id": self._clientId,
             "client_secret": self._clientSecret
@@ -27,7 +24,7 @@ class UntappdApi:
         params = {
             "q": brewery
         }
-        requestUrl = methodUrl + "?" + urlparse.urlencode({**params, **self._keys})
+        requestUrl = methodUrl + "?" + urlparse.urlencode({**params, **self.keys()})
         response = requests.get(requestUrl)
         
         headers = response.headers
@@ -43,7 +40,7 @@ class UntappdApi:
     
     def breweryInfo(self, breweryId="", writeFile=False):
         methodUrl = self._baseUrl + "brewery/info/"
-        requestUrl = methodUrl + str(breweryId) + "?" + urlparse.urlencode(self._keys)
+        requestUrl = methodUrl + str(breweryId) + "?" + urlparse.urlencode(self.keys())
         response = requests.get(requestUrl)
         
         headers = response.headers
@@ -55,4 +52,5 @@ class UntappdApi:
             brewery = content["response"]
         
         return brewery, counter, response
+
 
